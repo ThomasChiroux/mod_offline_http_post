@@ -5,7 +5,7 @@
 
 -behaviour(gen_mod).
 
--export([start/2, stop/1, , mod_options/1, depends/2, create_message/1, create_message/3]).
+-export([start/2, stop/1, mod_options/1, depends/2, create_message/1, create_message/3]).
 
 -include("xmpp.hrl").
 -include("logger.hrl").
