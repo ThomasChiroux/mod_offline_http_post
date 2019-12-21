@@ -5,7 +5,9 @@
 
 -behaviour(gen_mod).
 
--export([start/2, stop/1, mod_options/1, depends/2, create_message/1, create_message/3]).
+-export([start/2, stop/1, create_message/1, create_message/3]).
+
+-export([mod_opt_type/1, mod_options/1, depends/2]).
 
 -include("xmpp.hrl").
 -include("logger.hrl").
@@ -23,8 +25,18 @@ stop (_Host) ->
 depends(_Host, _Opts) ->
     [].
 
-mod_options(_Host) ->
-    [].
+mod_opt_type(post_url) ->
+    econf:string();
+mod_opt_type(auth_token) ->
+    econf:string();
+mod_opt_type(confidential) ->
+    econf:bool().
+
+mod_options(Host) ->
+    [{post_url, fun(Host) -> ejabberd_config:get_option({post_url, Host}) end},
+     {auth_token, fun(Host) -> ejabberd_config:get_option({auth_token, Host}) end},
+     {confidential, fun(Host) -> ejabberd_config:get_option({confidential, Host}) end}].
+
 
 create_message({Action, Packet} = Acc) when (Packet#message.type == chat) and (Packet#message.body /= []) ->
 	[{text, _, Body}] = Packet#message.body,
