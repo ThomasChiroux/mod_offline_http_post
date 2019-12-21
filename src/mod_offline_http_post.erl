@@ -5,7 +5,7 @@
 
 -behaviour(gen_mod).
 
--export([start/2, stop/1, create_message/1, create_message/3]).
+-export([start/2, stop/1, , mod_options/1, depends/2, create_message/1, create_message/3]).
 
 -include("xmpp.hrl").
 -include("logger.hrl").
@@ -19,6 +19,12 @@ start(_Host, _Opt) ->
 stop (_Host) ->
   ?INFO_MSG("stopping mod_offline_http_post", []),
   ejabberd_hooks:delete(offline_message_hook, _Host, ?MODULE, create_message, 1).
+
+depends(_Host, _Opts) ->
+    [].
+
+mod_options(_Host) ->
+    [].
 
 create_message({Action, Packet} = Acc) when (Packet#message.type == chat) and (Packet#message.body /= []) ->
 	[{text, _, Body}] = Packet#message.body,
